@@ -1,4 +1,4 @@
-from .day1 import Calibration
+from aoc2023.days.day1 import Calibration
 
 def test_tutorial_p1():
     calibration = Calibration('inputs/day1/tutorial1.txt')

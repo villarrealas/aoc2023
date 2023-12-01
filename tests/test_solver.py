@@ -1,4 +1,4 @@
-from .solver import SolverBase
+from aoc2023.classes.solver import SolverBase
 import pytest
 
 def test_read():

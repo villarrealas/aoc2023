@@ -1,5 +1,5 @@
 import sys
-from ..classes.solver import SolverBase
+from aoc2023.classes.solver import SolverBase
 
     # list of str digits which are allowed
 str_digits = [
@@ -41,7 +41,6 @@ class Calibration(SolverBase):
         self.store_input()
         res = []
         for line in self.stored_lines:
-            print(line)
             # find where existing digits are
             digit_idx = [ind for ind, i in enumerate(line) if i.isdigit()]
             if digit_idx:
