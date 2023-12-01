@@ -1,4 +1,5 @@
 import sys
+from classes.solver import SolverBase
 
     # list of str digits which are allowed
 str_digits = [
@@ -26,23 +27,20 @@ str_to_int_map = {
     'nine': '9',
 }
 
-class Calibration:
+class Calibration(SolverBase):
     '''
     Class for handling Day 1's Trebuchet problem.
     Takes file_path as variable.
     '''
 
-    def __init__(self, file_path):
-        f = open(file_path, "r")
-        self.read_lines = f.readlines()
-
-    def value(self, allow_strings=False):
+    def solve(self, allow_strings=False):
         '''
         Returns calibration value.
         allow_strings flag shifts between p1 and p2
         '''
+        self.store_input()
         res = []
-        for line in self.read_lines:
+        for line in self.stored_lines:
             print(line)
             # find where existing digits are
             digit_idx = [ind for ind, i in enumerate(line) if i.isdigit()]
@@ -66,6 +64,10 @@ class Calibration:
                         last_digit = str_to_int_map[str_digit]
             res.append(int(first_digit+last_digit))
         return sum(res)
+
+    def value(self, allow_strings=False):
+        return self.solve(allow_strings)
+        
 
 if __name__ == "__main__":
     file_path = sys.argv[1]
