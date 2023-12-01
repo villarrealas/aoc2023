@@ -1,5 +1,5 @@
 import sys
-from classes.solver import SolverBase
+from ..classes.solver import SolverBase
 
     # list of str digits which are allowed
 str_digits = [
