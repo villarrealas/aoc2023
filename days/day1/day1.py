@@ -1,4 +1,6 @@
-# list of str digits which are allowed
+import sys
+
+    # list of str digits which are allowed
 str_digits = [
     'one',
     'two',
@@ -9,18 +11,6 @@ str_digits = [
     'seven',
     'eight',
     'nine',
-]
-
-str_digits_backwards = [
-    'eno',
-    'owt',
-    'eerht',
-    'ruof',
-    'evif',
-    'xis',
-    'neves',
-    'thgie',
-    'enin',
 ]
 
 # map of the string values
@@ -36,49 +26,50 @@ str_to_int_map = {
     'nine': '9',
 }
 
-# open our file
-file = "input.txt"
-f = open(file, "r")
+class Calibration:
+    '''
+    Class for handling Day 1's Trebuchet problem.
+    Takes file_path as variable.
+    '''
 
-# string comprehension for digits in line
-all_digits = []
-for line in f:
-    # find where all the digits are
-    digit_idx = [ind for ind, i in enumerate(line) if i.isdigit()]
-    # check if there is a string digit closer than the first digit
-    if digit_idx:
-        first_idx = digit_idx[0]
-        first_digit = line[first_idx]
-        last_idx = digit_idx[-1]
-        last_digit = line[last_idx]
-    else:
-        first_idx = len(line) -1
-        first_digit = 0
-        last_idx = 0
-        last_digit = 0
-    for str_digit in str_digits:
-        val = line.find(str_digit, 0, first_idx+2)
-        if val != -1 and val <= first_idx:
-            first_idx = val
-            first_digit = str_to_int_map[str_digit]
-    # then we're going to do the dumbest thing ever and
-    # invert the string
-    inv_line = line[::-1]
-    # and now repeat the above nonsense
-    last_idx_inv  = len(line) - last_idx
-    for str_digit_bw in str_digits_backwards:
-        val = inv_line.find(str_digit_bw, 0, len(line) - last_idx + 2)
-        if val != -1 and val <= last_idx_inv:
-            last_idx_inv = val
-            last_digit = str_to_int_map[str_digit_bw[::-1]]
-    # append the digits
-    all_digits.append(int(first_digit+last_digit))
+    def __init__(self, file_path):
+        f = open(file_path, "r")
+        self.read_lines = f.readlines()
 
-print(all_digits)
+    def value(self, allow_strings=False):
+        '''
+        Returns calibration value.
+        allow_strings flag shifts between p1 and p2
+        '''
+        res = []
+        for line in self.read_lines:
+            print(line)
+            # find where existing digits are
+            digit_idx = [ind for ind, i in enumerate(line) if i.isdigit()]
+            if digit_idx:
+                first_idx = digit_idx[0]
+                first_digit = line[first_idx]
+                last_idx = digit_idx[-1]
+                last_digit = line[last_idx]
+            else:
+                first_idx = len(line) - 1
+                last_idx = 0
+            if allow_strings == True:
+                for str_digit in str_digits:
+                    fval = line.find(str_digit)
+                    if fval != -1 and fval <= first_idx:
+                        first_idx = fval
+                        first_digit = str_to_int_map[str_digit]
+                    lval = line.rfind(str_digit)
+                    if lval != -1 and lval >= last_idx:
+                        last_idx = lval
+                        last_digit = str_to_int_map[str_digit]
+            res.append(int(first_digit+last_digit))
+        return sum(res)
 
-# sum the digits
-sum_digits = sum(all_digits)
+if __name__ == "__main__":
+    file_path = sys.argv[1]
+    string_var_choice = sys.argv[2]
 
-# print it up
-print(sum_digits)
-    
+    calibration = Calibration(file_path)
+    print(calibration.value(allow_strings=string_var_choice))
