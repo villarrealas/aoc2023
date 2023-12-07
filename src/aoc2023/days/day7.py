@@ -120,6 +120,11 @@ class Hand():
     def give_alt_high_card(self, idx):
         return self.alt_unsorted_hand[idx]
     
+    def give_sortable(self):
+        return ([self.give_hand_rank()] + self.unsorted_hand + [self.bid])
+
+    def give_sortable_joker(self):
+        return ([self.give_hand_rank_joker()] + self.alt_unsorted_hand + [self.bid])
 
 
 class Day7Solver(SolverBase):
@@ -132,55 +137,15 @@ class Day7Solver(SolverBase):
         handnbids = []
         for line in lines:
             hand, bid = line.split(' ')
-            handnbids.append(Hand(hand, bid)) 
+            inst = Hand(hand,bid)
+            handnbids.append(inst.give_sortable())
 
-        ordered_handnbids = []
-        # now we need to rank order these hands...
-        for rank_find in range(6,-1,-1):
-            rf_handnbids = [handnbid for handnbid in handnbids if handnbid.give_hand_rank() == rank_find]
-            if len(rf_handnbids) == 1:
-                ordered_handnbids.append(rf_handnbids[0])
-            elif len(rf_handnbids) == 0:
-                continue
-            else:
-                for fcf in range(14, 1, -1):
-                    fcf_handnbid = [handnbid for handnbid in rf_handnbids if handnbid.give_high_card(0) == fcf]
-                    if len(fcf_handnbid) == 1:
-                        ordered_handnbids.append(fcf_handnbid[0])
-                    elif len(fcf_handnbid) == 0:
-                        continue
-                    else:
-                        for scf in range(14, 1, -1):
-                            scf_handnbid = [handnbid for handnbid in fcf_handnbid if handnbid.give_high_card(1) == scf]
-                            if len(scf_handnbid) == 1:
-                                ordered_handnbids.append(scf_handnbid[0])
-                            elif len(scf_handnbid) == 0:
-                                continue
-                            else:
-                                for tcf in range(14, 1, -1):
-                                    tcf_handnbid = [handnbid for handnbid in scf_handnbid if handnbid.give_high_card(2) == tcf]
-                                    if len(tcf_handnbid) == 1:
-                                        ordered_handnbids.append(tcf_handnbid[0])
-                                    elif len(tcf_handnbid) == 0:
-                                        continue
-                                    else:
-                                        for focf in range(14, 1, -1):
-                                            focf_handnbid = [handnbid for handnbid in tcf_handnbid if handnbid.give_high_card(3) == focf]
-                                            if len(focf_handnbid) == 1:
-                                                ordered_handnbids.append(focf_handnbid[0])
-                                            elif len(focf_handnbid) == 0:
-                                                continue
-                                            else:
-                                                for fvcf in range(14, 1, -1):
-                                                    fvcf_handnbid = [handnbid for handnbid in focf_handnbid if handnbid.give_high_card(4) == fvcf]
-                                                    if len(fvcf_handnbid) == 1:
-                                                        ordered_handnbids.append(fvcf_handnbid[0])
-                                                    else:
-                                                        continue
+        ordered_handnbids = sorted(handnbids, reverse=True)
+
         max_rank = len(ordered_handnbids)
         winnings = 0
         for i in range(len(ordered_handnbids)):
-            winnings = winnings + (ordered_handnbids[i].bid * (max_rank - i))
+            winnings = winnings + (ordered_handnbids[i][-1] * (max_rank - i))
         
         return winnings
 
@@ -190,55 +155,15 @@ class Day7Solver(SolverBase):
         handnbids = []
         for line in lines:
             hand, bid = line.split(' ')
-            handnbids.append(Hand(hand, bid)) 
+            inst = Hand(hand,bid)
+            handnbids.append(inst.give_sortable_joker())
 
-        ordered_handnbids = []
-        # now we need to rank order these hands...
-        for rank_find in range(6,-1,-1):
-            rf_handnbids = [handnbid for handnbid in handnbids if handnbid.give_hand_rank_joker() == rank_find]
-            if len(rf_handnbids) == 1:
-                ordered_handnbids.append(rf_handnbids[0])
-            elif len(rf_handnbids) == 0:
-                continue
-            else:
-                for fcf in range(14, 0, -1):
-                    fcf_handnbid = [handnbid for handnbid in rf_handnbids if handnbid.give_alt_high_card(0) == fcf]
-                    if len(fcf_handnbid) == 1:
-                        ordered_handnbids.append(fcf_handnbid[0])
-                    elif len(fcf_handnbid) == 0:
-                        continue
-                    else:
-                        for scf in range(14, 0, -1):
-                            scf_handnbid = [handnbid for handnbid in fcf_handnbid if handnbid.give_alt_high_card(1) == scf]
-                            if len(scf_handnbid) == 1:
-                                ordered_handnbids.append(scf_handnbid[0])
-                            elif len(scf_handnbid) == 0:
-                                continue
-                            else:
-                                for tcf in range(14, 0, -1):
-                                    tcf_handnbid = [handnbid for handnbid in scf_handnbid if handnbid.give_alt_high_card(2) == tcf]
-                                    if len(tcf_handnbid) == 1:
-                                        ordered_handnbids.append(tcf_handnbid[0])
-                                    elif len(tcf_handnbid) == 0:
-                                        continue
-                                    else:
-                                        for focf in range(14, 0, -1):
-                                            focf_handnbid = [handnbid for handnbid in tcf_handnbid if handnbid.give_alt_high_card(3) == focf]
-                                            if len(focf_handnbid) == 1:
-                                                ordered_handnbids.append(focf_handnbid[0])
-                                            elif len(focf_handnbid) == 0:
-                                                continue
-                                            else:
-                                                for fvcf in range(14, 0, -1):
-                                                    fvcf_handnbid = [handnbid for handnbid in focf_handnbid if handnbid.give_alt_high_card(4) == fvcf]
-                                                    if len(fvcf_handnbid) == 1:
-                                                        ordered_handnbids.append(fvcf_handnbid[0])
-                                                    else:
-                                                        continue
+        ordered_handnbids = sorted(handnbids, reverse=True)
+
         max_rank = len(ordered_handnbids)
         winnings = 0
         for i in range(len(ordered_handnbids)):
-            winnings = winnings + (ordered_handnbids[i].bid * (max_rank - i))
+            winnings = winnings + (ordered_handnbids[i][-1] * (max_rank - i))
         
         return winnings
 
