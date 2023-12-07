@@ -106,7 +106,7 @@ class Hand():
             elif old_hand_rank == 1:
                 new_hand_rank = 3
             else:
-                new_hand_rank = 2
+                new_hand_rank = 1
         else:
             new_hand_rank = 0
         if new_hand_rank >= old_hand_rank:

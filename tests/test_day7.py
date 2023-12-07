@@ -9,3 +9,8 @@ def test_tutorial_p2():
     solver = Day7Solver('day7/tutorial.txt')
     res = solver.solve_p2()
     assert res == 5905
+
+def test_tutorial_p2_ec():
+    solver = Day7Solver('day7/edgecases.txt')
+    res = solver.solve_p2()
+    assert res == 6839
