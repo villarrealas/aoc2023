@@ -6,7 +6,7 @@ class SolverBase():
     def __init__(self, path_to_file):
         '''Initialize SolverBase w/ path to an input file.'''
         # common base path for all stuff here
-        path_base = "/Users/sierrav/Repositories/aoc2023/inputs/"
+        path_base = "./inputs/"
         self.path_to_file = path_base+path_to_file
     
     def store_input(self):
