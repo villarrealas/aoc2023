@@ -22,3 +22,8 @@ def test_tutorial_p2_mt():
     solver = Day8Solver('day8/tutorial3.txt')
     res = solver.solve_p2_mt()
     assert res == 6
+
+def test_tutorial_p2_lcm():
+    solver = Day8Solver('day8/tutorial3.txt')
+    res = solver.solve_p2_lcm()
+    assert res == 6

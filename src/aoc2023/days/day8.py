@@ -1,7 +1,11 @@
 from aoc2023.classes.solver import SolverBase
-import re
 from itertools import cycle
 from multiprocessing import Pool
+import math
+from functools import reduce
+
+def lcm(denominators):
+    return reduce(lambda a,b: a*b // math.gcd(a,b), denominators)
 
 class Junction():
     '''
@@ -158,6 +162,42 @@ class Day8Solver(SolverBase):
                 break
 
         return steps
+    
+    def method_p2_lcm(self):
+        self.store_input()
+        lines = self.stored_lines
+        directions = [char for char in lines[0].strip()]
+        junction_list = dict()
+        for line in lines[2:]:
+            junction, nextparts = line.split('=')
+            junction = junction.strip()
+            parts_l, parts_r = nextparts.split(',')
+            parts_l = parts_l.strip().strip('(')
+            parts_r = parts_r.strip().strip(')')
+            junction_list[junction] = Junction(junction, parts_l, parts_r)
+        starting_junctions = [junction for junction in junction_list.values() if junction.value == -1]
+        loopcloses = []
+        first_junction = []
+        for current_junction in starting_junctions:
+            steps = 0
+            for nextdir in cycle(directions):
+                if nextdir == 'L':
+                    next_junction = self.walk_junction_l(current_junction)
+                else:
+                    next_junction = self.walk_junction_r(current_junction)
+                current_junction = junction_list[next_junction]
+                if not first_junction:
+                    first_junction = junction_list[next_junction]
+                else:
+                    if current_junction.junction_name == first_junction.junction_name:
+                        loopcloses.append(steps)
+                        first_junction = []
+                        break
+                steps = steps + 1
+        print(loopcloses)
+        res = lcm(loopcloses)
+        return res
+        
 
     def solve_p1(self):
         val = self.method_p1()
@@ -174,10 +214,14 @@ class Day8Solver(SolverBase):
     def solve_p2_mt(self):
         val = self.method_p2_mt()
         return val
+    
+    def solve_p2_lcm(self):
+        val = self.method_p2_lcm()
+        return val
 
 if __name__ == "__main__":
     solver = Day8Solver('day8/input.txt')
-    res = solver.solve_p2_mt()
+    res = solver.solve_p2_lcm()
     print(res)
 
             
