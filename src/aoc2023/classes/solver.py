@@ -12,7 +12,9 @@ class SolverBase():
     def store_input(self):
         '''Read lines from an input file to stored_lines property.'''
         f = open(self.path_to_file)
-        self.stored_lines = f.readlines()
+        lines = f.readlines()
+        lines = [line.strip() for line in lines]
+        self.stored_lines = lines
     
     def solve(self):
         '''Placeholder for solver.'''
